@@ -93,8 +93,7 @@ comment: |
 # Auto-lock all approved Affiliated Announcement posts
 type: submission
 flair_text: ["GL.iNet Affiliated Announcements"]
-action: lock
-action_reason: "Auto-lock: Official GL.iNet Affiliated Announcement"
+set_locked: true
 
 ---
 
@@ -105,6 +104,6 @@ type: comment
 parent_submission:
   flair_text: ["GL.iNet Affiliated Announcements"]
 author:
-  name (regex, full-exact): ["^(?!{{author}}$).*"]
+  is_submitter: false
 action: remove
 action_reason: "Comments restricted on official announcement posts."
