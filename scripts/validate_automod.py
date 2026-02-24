@@ -50,6 +50,7 @@ NUMERIC_KEY_RE = re.compile(
     r"^([a-z_]+)\s*-\s*must be set to a number\b",
     re.IGNORECASE | re.MULTILINE,
 )
+DECORATIVE_HASH_SEPARATOR_RE = re.compile(r"^\s*#{8,}\s*$")
 
 
 @dataclass(frozen=True)
@@ -145,6 +146,18 @@ def validate(target_path: Path, spec_path: Path) -> list[str]:
 
     raw_text = target_path.read_text(encoding="utf-8")
 
+    decorative_separator_lines = [
+        str(index)
+        for index, line in enumerate(raw_text.splitlines(), start=1)
+        if DECORATIVE_HASH_SEPARATOR_RE.match(line)
+    ]
+    if decorative_separator_lines:
+        errors.append(
+            "Decorative hash separator lines like `##########` are invalid. "
+            "Use a single title comment line and `---` between rules. "
+            f"Found at line(s): {', '.join(decorative_separator_lines)}."
+        )
+
     try:
         docs = list(yaml.load_all(raw_text, Loader=UniqueKeyLoader))
     except yaml.YAMLError as exc:
@@ -207,10 +220,27 @@ def validate(target_path: Path, spec_path: Path) -> list[str]:
 
 
 def _default_target_path() -> str:
-    for candidate in ("automod-main-rule.md", "automod-rule.md"):
+    for candidate in (
+        "automod_scripts/automod-main-rule.yaml",
+        "automod_scripts/automod-main-rule.md",
+        "automod-main-rule.yaml",
+        "automod-main-rule.md",
+        "automod-rule.yaml",
+        "automod-rule.md",
+    ):
         if Path(candidate).exists():
             return candidate
-    return "automod-main-rule.md"
+    return "automod_scripts/automod-main-rule.yaml"
+
+
+def _default_spec_path() -> str:
+    for candidate in (
+        "automod_scripts/reddit_automod_rules.md",
+        "reddit_automod_rules.md",
+    ):
+        if Path(candidate).exists():
+            return candidate
+    return "automod_scripts/reddit_automod_rules.md"
 
 
 def main() -> int:
@@ -223,7 +253,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--spec",
-        default="reddit_automod_rules.md",
+        default=_default_spec_path(),
         help="Path to the spec text file used to derive validation constraints.",
     )
     args = parser.parse_args()
