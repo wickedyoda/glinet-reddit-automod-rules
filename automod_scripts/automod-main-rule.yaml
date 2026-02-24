@@ -1,3 +1,5 @@
+# Formatting note: Do not use decorative hash separators like `##########`.
+# Keep a single `# RULE ...` title line and separate rules with `---`.
 # RULE 1: Remove comments from low karma / new accounts
 type: comment
 author:
