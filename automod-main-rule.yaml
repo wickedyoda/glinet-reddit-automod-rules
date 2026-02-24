@@ -1,6 +1,4 @@
-############################################
 # RULE 1: Remove comments from low karma / new accounts
-############################################
 type: comment
 author:
   account_age: "< 5 days"
@@ -27,9 +25,7 @@ message: |
 
 ---
 
-############################################
 # RULE 2: Encourage users to mark solved posts
-############################################
 type: submission
 flair_text: ["questions/support"]
 comment: |
@@ -50,9 +46,7 @@ comment: |
 
 ---
 
-############################################
 # RULE 3: Reminder to search before posting
-############################################
 type: submission
 flair_text:
   - "news"
@@ -71,9 +65,7 @@ comment: |
 
 ---
 
-############################################
 # RULE 4: Restrict "GL.iNet Affiliated Announcements" Flair
-############################################
 
 # Remove unauthorized users using restricted flair
 type: submission
@@ -97,9 +89,7 @@ set_locked: true
 
 ---
 
-############################################
 # RULE 5: Remove comments from anyone except OP on Affiliated posts
-############################################
 type: comment
 parent_submission:
   flair_text: ["GL.iNet Affiliated Announcements"]
